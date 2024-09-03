@@ -1,7 +1,10 @@
+from django.shortcuts import get_object_or_404
 from .products import products
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .serializers import ProductSerializer
+from .models import Product
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -21,16 +24,19 @@ def getRoutes(request):
     ]
     return Response(routes)
 
+
 @api_view(['GET'])
 def getProducts(request):
-    return Response(products)
+    products = Product.objects.all()
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
 
-
+# Retrieve a single product by its ID
 @api_view(['GET'])
 def getProduct(request, pk):
-    product = None
-    for i in products:
-        if i['_id'] == pk:
-            product = i
-            break
-    return Response(product)
+    try:
+        product = Product.objects.get(_id=pk)
+        serializer = ProductSerializer(product, many=False)
+        return Response(serializer.data)
+    except Product.DoesNotExist:
+        return Response({'detail': 'Product not found'}, status=404)

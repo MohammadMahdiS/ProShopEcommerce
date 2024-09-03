@@ -2,23 +2,9 @@ import React, {useState, useEffect} from 'react'
 import {Card} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import Rating from './Rating'
-import axios from 'axios'
-import config from '../config'
 
 function Product({product}) {
-  const [products, setProducts] = useState([])
-
-  useEffect(() => {
-    
-    async function fetchProducts() {
-      const {data} = axios.get(`${config.apiUrl}${config.apiProducts}`)
-      setProducts(data)
-    }
-
-    fetchProducts()
-
-  }, [])
-
+  
   return (
     <Card className="my-3 p-3 rounded">
       {/* Link to the product details page */}
